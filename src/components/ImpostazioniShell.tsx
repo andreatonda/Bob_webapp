@@ -78,10 +78,19 @@ export function ImpostazioniShell({ children }: { children: ReactNode }) {
 
       <header className="mb-6">
         {/* Il ritorno al lavoro sta in cima e per primo: da qui si esce piu'
-            spesso di quanto si entri, e l'etichetta dice dove si torna. */}
+            spesso di quanto si entri, e l'etichetta dice dove si torna.
+            SOLO SOTTO md (05/09), esattamente come il link «Impostazioni»
+            della dashboard il 29/08. Da md in su l'header mostra gia' un
+            bottone con la STESSA etichetta e la STESSA destinazione — «Il mio
+            lavoro» / «I miei lavori» verso /dashboard — e su ogni pagina
+            /impostazioni/* i due si vedevano insieme. Sotto md quel bottone
+            vive dentro un blocco `hidden md:flex` e sparisce nel menu ☰:
+            li' questo link e' l'unica strada di ritorno visibile, quindi
+            resta. Terzo doppione nato da 58f4ca5, dopo Impostazioni (29/08) e
+            «Cerca un professionista» (05/09). */}
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-bob-ink/55 transition hover:text-bob-indigo"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-bob-ink/55 transition hover:text-bob-indigo md:hidden"
           data-testid="link-torna-al-lavoro"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />

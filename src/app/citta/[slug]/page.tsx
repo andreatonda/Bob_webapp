@@ -72,7 +72,7 @@ export default async function CityPage({
             <Link href="/citta/milano" className="btn-secondary px-5 py-2.5">
               Vai a Milano
             </Link>
-            <Link href="/" className="btn-ghost px-5 py-2.5">
+            <Link href="/#bob" className="btn-ghost px-5 py-2.5">
               Parla con Bob
             </Link>
           </div>

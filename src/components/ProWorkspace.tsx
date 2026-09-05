@@ -373,12 +373,13 @@ export function ProWorkspace({
               >
                 Modifica profilo
               </Link>
-              <Link
-                href="/messaggi"
-                className="btn-secondary py-2 text-center text-sm"
-              >
-                Vai ai messaggi
-              </Link>
+              {/* «VAI AI MESSAGGI» NON E' PIU' QUI (05/09). Il link e' del
+                  03/06; la bolla flottante dei messaggi e' del 17/07 e sta su
+                  ogni pagina tranne /messaggi e /admin, quindi anche su questa,
+                  in basso a destra, col conteggio dei non letti che questo
+                  link non aveva. E' la rimozione che quel cambio non ha fatto:
+                  due strade per lo stesso posto, e quella che restava indietro
+                  era questa. */}
               <Link
                 href={`/professionisti/${profile.id}`}
                 className="btn-ghost justify-center text-sm"

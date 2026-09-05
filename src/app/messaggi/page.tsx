@@ -523,7 +523,7 @@ function MessaggiInner() {
               : "Parla con Bob per trovare un professionista e iniziare una conversazione."}
           </p>
           {myType !== "professional" && (
-            <Link href="/" className="btn-primary mt-1 px-5 py-2.5">
+            <Link href="/#bob" className="btn-primary mt-1 px-5 py-2.5">
               Parla con Bob
             </Link>
           )}

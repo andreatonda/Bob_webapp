@@ -145,7 +145,7 @@ export default function ComeFunzionaPage() {
       </section>
 
       <div className="mt-10 flex flex-col items-center gap-3">
-        <Link href="/" className="btn-primary px-6 py-3" data-testid="cta-parla-con-bob">
+        <Link href="/#bob" className="btn-primary px-6 py-3" data-testid="cta-parla-con-bob">
           Parla con Bob
         </Link>
         <Link

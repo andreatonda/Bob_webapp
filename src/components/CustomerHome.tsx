@@ -499,7 +499,7 @@ export function CustomerHome() {
           Racconta a Bob il tuo problema: capisce di cosa hai bisogno e ti
           mette in contatto con i professionisti giusti.
         </p>
-        <Link href="/" className="btn-primary mt-1 px-5 py-2.5">
+        <Link href="/#bob" className="btn-primary mt-1 px-5 py-2.5">
           Parla con Bob
         </Link>
       </div>
@@ -545,7 +545,7 @@ export function CustomerHome() {
             <div className="mt-4 rounded-xl border border-dashed border-bob-indigo/25 bg-bob-indigo-50/40 p-4 text-center">
               <p className="text-sm text-bob-ink/60">
                 Nessun lavoro in corso.{" "}
-                <Link href="/" className="font-medium text-bob-indigo hover:underline">
+                <Link href="/#bob" className="font-medium text-bob-indigo hover:underline">
                   Parla con Bob
                 </Link>{" "}
                 per iniziarne uno.
