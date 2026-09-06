@@ -108,9 +108,19 @@ export default function ComeFunzionaPage() {
         </h2>
         <p className="mt-2 text-sm text-bob-ink/65">
           Quando vedi un elenco di professionisti, l&apos;ordine non è casuale e
-          non è alfabetico. Contano queste cose, in quest&apos;ordine:
+          non è alfabetico. Contano queste cose, in quest&apos;ordine — la prima
+          solo quando hai cercato un lavoro preciso:
         </p>
         <ol className="mt-4 space-y-3 text-sm text-bob-ink/70">
+          <li>
+            <strong className="text-bob-ink">
+              Chi fa proprio il lavoro che hai cercato.
+            </strong>{" "}
+            Se hai scritto «rubinetto che perde», chi ha dichiarato quell&apos;
+            intervento viene prima. Gli altri idraulici restano in elenco, sotto:
+            la loro scheda dice che quel lavoro non l&apos;hanno dichiarato, così
+            puoi chiederglielo lo stesso invece di non vederli affatto.
+          </li>
           <li>
             <strong className="text-bob-ink">Chi lavora dove servi tu.</strong>{" "}
             Prima chi ha dichiarato proprio la tua zona, poi chi copre la città,
