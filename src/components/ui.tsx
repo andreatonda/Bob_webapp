@@ -220,7 +220,24 @@ export function PriceTag({
 }
 
 // ---------- Card professionista ----------
-export function ProfessionalCardItem({ p }: { p: ProfessionalCard }) {
+/**
+ * `intervento` c'e' solo quando si arriva da una ricerca per un lavoro
+ * preciso. In quel caso la scheda dice se quel lavoro e' dichiarato oppure no:
+ * senza questa riga, un idraulico che non fa quell'intervento sembrerebbe una
+ * risposta alla domanda, e non lo e'. Dirlo costa una riga e vale piu' di
+ * nascondere il professionista, che con sei iscritti vorrebbe dire mostrare
+ * una pagina vuota.
+ */
+export function ProfessionalCardItem({
+  p,
+  intervento,
+}: {
+  p: ProfessionalCard;
+  intervento?: { slug: string; nome: string } | null;
+}) {
+  const dichiarato =
+    intervento != null &&
+    p.offers.some((o) => o.subserviceSlug === intervento.slug);
   const initials = p.displayName
     .split(" ")
     .map((w) => w[0])
@@ -252,6 +269,17 @@ export function ProfessionalCardItem({ p }: { p: ProfessionalCard }) {
           {p.city.name}
         </span>
       </div>
+
+      {intervento && (
+        <p
+          className={`text-xs ${dichiarato ? "font-medium text-bob-ink/75" : "text-bob-ink/45"}`}
+          data-testid={dichiarato ? "offre-intervento" : "non-dichiara-intervento"}
+        >
+          {dichiarato
+            ? `Offre ${intervento.nome.toLowerCase()}`
+            : "Non ha dichiarato questo intervento"}
+        </p>
+      )}
 
       <div className="mt-auto flex items-center justify-between border-t border-black/5 pt-3">
         <Stars value={p.avgRating} count={p.nRatings} />

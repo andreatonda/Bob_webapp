@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCities, getServices, getProfessionals } from "@/lib/data";
+import {
+  getCities,
+  getServices,
+  getProfessionals,
+  offreIntervento,
+} from "@/lib/data";
 import { resolveSearch, SOGLIA_CERTEZZA } from "@/lib/search";
 import { ProfessionalFilters } from "@/components/ProfessionalFilters";
 import { RicercaBox } from "@/components/RicercaBox";
@@ -17,13 +22,36 @@ export const metadata: Metadata = {
     "Cerca il lavoro che ti serve e trova i professionisti verificati di BOB: idraulici, elettricisti, pulizie e altri servizi a Milano, con rating e tariffe trasparenti.",
 };
 
-function sortPros(pros: ProfessionalCard[], sort: string) {
+/**
+ * Il riordino esplicito del cliente («rating piu' alto», «prezzo piu' basso»)
+ * agisce DENTRO i due gruppi, non sopra: chi ha dichiarato l'intervento
+ * cercato resta davanti a chi non l'ha dichiarato. Altrimenti scegliere
+ * «prezzo piu' basso» rimescolerebbe insieme chi fa quel lavoro e chi no, e la
+ * ricerca per intervento si perderebbe al primo tocco di una tendina.
+ */
+function sortPros(
+  pros: ProfessionalCard[],
+  sort: string,
+  subserviceSlug?: string
+) {
   const copy = [...pros];
-  if (sort === "rating") {
-    copy.sort((a, b) => (b.avgRating ?? 0) - (a.avgRating ?? 0));
-  } else if (sort === "prezzo") {
-    copy.sort((a, b) => (a.minPrice ?? 9999) - (b.minPrice ?? 9999));
-  }
+  const criterio =
+    sort === "rating"
+      ? (a: ProfessionalCard, b: ProfessionalCard) =>
+          (b.avgRating ?? 0) - (a.avgRating ?? 0)
+      : sort === "prezzo"
+        ? (a: ProfessionalCard, b: ProfessionalCard) =>
+            (a.minPrice ?? 9999) - (b.minPrice ?? 9999)
+        : null;
+  if (!criterio) return copy;
+  copy.sort((a, b) => {
+    if (subserviceSlug) {
+      const ia = offreIntervento(a, subserviceSlug) ? 1 : 0;
+      const ib = offreIntervento(b, subserviceSlug) ? 1 : 0;
+      if (ia !== ib) return ib - ia;
+    }
+    return criterio(a, b);
+  });
   return copy;
 }
 
@@ -64,16 +92,29 @@ export default async function ProfessionalsPage({
     }
   }
 
+  // L'intervento su cui ordinare e da etichettare sulle schede. Solo se la
+  // corrispondenza e' un intervento (non un mestiere) e solo sopra la soglia:
+  // a 0.45 il risolutore non sa, e non si riordina l'elenco su un forse.
+  const interventoCercato =
+    capito?.subservice && (capito.score ?? 0) >= SOGLIA_CERTEZZA
+      ? { slug: capito.subservice, nome: capito.display }
+      : null;
+
   const [cities, services, pros] = await Promise.all([
     getCities(),
     getServices(),
     getProfessionals({
       citySlug: searchParams.city,
       serviceSlug: searchParams.service,
+      subserviceSlug: interventoCercato?.slug,
     }),
   ]);
 
-  const sorted = sortPros(pros, searchParams.sort ?? "consigliati");
+  const sorted = sortPros(
+    pros,
+    searchParams.sort ?? "consigliati",
+    interventoCercato?.slug
+  );
 
   // Sopra la soglia la risposta e' una risposta. Sotto e' un «forse cercavi», e
   // va detto: a 0.45 il risolutore, onestamente, non sa (docs/RICERCA.md §3).
@@ -162,7 +203,7 @@ export default async function ProfessionalsPage({
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sorted.map((p) => (
-            <ProfessionalCardItem key={p.id} p={p} />
+            <ProfessionalCardItem key={p.id} p={p} intervento={interventoCercato} />
           ))}
         </div>
       )}

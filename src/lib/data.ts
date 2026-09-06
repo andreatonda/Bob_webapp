@@ -336,6 +336,26 @@ export interface ProfessionalFilters {
   maxPrice?: number;
   /** La zona dichiarata dal cliente, se l'ha detta. */
   zoneSlug?: string;
+  /**
+   * L'intervento esatto che il cliente ha cercato. NON esclude nessuno: chi
+   * non lo dichiara resta in elenco, sotto, e la scheda lo dice. Con sei
+   * professionisti, escludere vorrebbe dire mostrare una pagina vuota a chi
+   * un idraulico in citta' ce l'ha.
+   */
+  subserviceSlug?: string;
+}
+
+/**
+ * Questo professionista ha dichiarato proprio questo intervento?
+ * Le righe con subserviceSlug null sono «il mestiere, nessun intervento
+ * specifico» e non contano come dichiarazione di un lavoro preciso.
+ */
+export function offreIntervento(
+  p: ProfessionalCard,
+  subserviceSlug: string | null | undefined
+): boolean {
+  if (!subserviceSlug) return false;
+  return p.offers.some((o) => o.subserviceSlug === subserviceSlug);
 }
 
 // ---------- Copertura geografica (migrazioni 057 e 058) ----------
@@ -416,12 +436,26 @@ export async function getProfessionals(
     );
   }
 
-  // Ordinamento: prima chi e' piu' vicino (il gettone piu' preciso che ha fatto
-  // match), poi verificati, poi rating piu' alto, poi prezzo minore. La
-  // precisione viene per prima di proposito: un professionista che copre tutta
-  // Italia deve comparire per una richiesta di Milano, ma non davanti
-  // all'idraulico del quartiere.
+  // Ordinamento: prima chi ha dichiarato PROPRIO l'intervento cercato, poi chi
+  // e' piu' vicino (il gettone piu' preciso che ha fatto match), poi
+  // verificati, poi rating piu' alto, poi prezzo minore.
+  //
+  // L'intervento esatto viene per primo perche' e' la domanda che il cliente
+  // ha fatto: chi scrive «rubinetto che perde» ha detto una cosa piu' precisa
+  // di «idraulico», e ignorarla vorrebbe dire buttare via l'informazione in
+  // piu'. Ma NON esclude: chi fa l'idraulico e non ha dichiarato quel lavoro
+  // resta in elenco, sotto, e la sua scheda lo dice — con sei professionisti,
+  // escludere vuol dire mostrare il vuoto a chi un idraulico ce l'ha.
+  //
+  // La precisione dell'area viene subito dopo, e per lo stesso motivo di
+  // prima: chi copre tutta Italia deve comparire per una richiesta di Milano,
+  // ma non davanti all'idraulico del quartiere.
   cards.sort((a, b) => {
+    if (filters.subserviceSlug) {
+      const ia = offreIntervento(a, filters.subserviceSlug) ? 1 : 0;
+      const ib = offreIntervento(b, filters.subserviceSlug) ? 1 : 0;
+      if (ia !== ib) return ib - ia;
+    }
     if (gettoniDellaRichiesta.length > 0) {
       const ra = rangoCopertura(
         { keys: a.coverageKeys, citySlug: a.city.slug },

@@ -253,21 +253,28 @@ sorpreso due volte.
    dopo ogni migrazione.
 4. Dal vivo su www.meetonda.com, desktop **e 390px**.
 
-## 9. Stato al 2 settembre 2026 — fotografia, non verità
+## 9. Stato al 5 settembre 2026 — fotografia, non verità
 
 Invecchia dal giorno dopo: la verità è il repo, lo schema vivo e la produzione.
 
 **C'è**: vocabolario (491 termini, tutti e 105 gli interventi non-«Altro»
-coperti), risolutore con bande e ordinamento per specificità,
-`professional_services` come verità unica con l'unione già fatta.
+coperti); risolutore con bande e ordinamento per specificità;
+`professional_services` come verità unica con l'unione già fatta; la casella di
+ricerca su `/professionisti`, con i suggerimenti mentre si scrive, la pastiglia
+che mostra come ha capito e le tre bande rispettate; il primo criterio del
+ranking — chi ha dichiarato l'intervento cercato viene prima di chi non l'ha
+dichiarato, e la scheda lo dice a entrambi.
 
-**Non c'è**: la casella di ricerca (nessuna pagina chiama il risolutore); il
-ranking in SQL coi pesi di §4 — `getProfessionals` carica ancora tutti i
-professionisti e filtra in JavaScript; gli slot sponsorizzati; il registro
-delle ricerche a vuoto; la schermata che chiede al professionista i suoi
-interventi; il `drop column` della 071.
+**Non c'è**: il resto del ranking coi pesi di §4 — `getProfessionals` carica
+ancora tutti i professionisti e ordina in JavaScript, e il criterio
+dell'intervento è un raggruppamento (prima chi lo dichiara), non ancora un
+punteggio; gli slot sponsorizzati; il registro delle ricerche a vuoto; la
+schermata che chiede al professionista i suoi interventi; il `drop column`
+della 071.
 
 **Il limite vero non è il codice, è il dato**: quattro professionisti su sei
 non dichiaravano nessun intervento prima della 070, e «scarico otturato»
 oggi non trova nessuno perché nessuno l'ha dichiarato — non perché la ricerca
-non funzioni.
+non funzioni. Adesso che l'intervento dichiarato decide il primo posto, il
+valore di quella schermata è salito: è quella che riempie il dato su cui il
+ranking si regge.
